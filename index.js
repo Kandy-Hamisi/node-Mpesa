@@ -4,6 +4,7 @@ const axios = require("axios");
 const app = express();
 require("dotenv").config();
 const cors = require("cors");
+const moment = require("moment");
 const port = process.env.PORT;
 
 app.listen(port, () => {
@@ -37,7 +38,7 @@ const generateToken = async (req, res, next) => {
     }).then((response) => {
         console.log(response.data.access_token);
         token = response.data.access_token;
-        // next();
+        next();
     })
     .catch((err) => {
         console.log(err);
@@ -58,6 +59,8 @@ app.post("/stk", generateToken, async (req, res) => {
     ("0" + date.getMinutes()).slice(-2) +
     ("0" + date.getSeconds()).slice(-2);
 
+    // const timeStamp = moment().format();
+
     const shortCode = process.env.SHORTCODE;
     const passKey = process.env.PASSKEY;
 
@@ -76,8 +79,8 @@ app.post("/stk", generateToken, async (req, res) => {
                 PartyA: `254${phone}`,
                 PartyB: shortCode,
                 PhoneNumber: `254${phone}`,
-                CallBackURL: "https://mydomain.com/pat",
-                AccountReference: `Sanity Pay 254${phone}`,
+                CallBackURL: "https://kandy-hamisi.github.io/",
+                AccountReference: `254${phone}`,
                 TransactionDesc: "Test",
             },
             {
@@ -89,7 +92,7 @@ app.post("/stk", generateToken, async (req, res) => {
             console.log(data.data)
             res.status(200).json(data.data)
         }).catch((err) => {
-            console.log(err.message)
+            console.log(err)
             res.status(400).json(err.message);
         })
 })
